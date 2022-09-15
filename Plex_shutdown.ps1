@@ -10,7 +10,8 @@
 ##########################################################################
 #Config
 $chemin_du_repertoire_script = "C:\Users\maxim\OneDrive\Documents\plex_scripts\Plex_shutdown"
-$Plex = "http://127.0.0.1:32400/status/sessions?X-Plex-Token=nepbhgAn_3-yb_C2-xBE"
+$token = ""
+$Plex = "http://127.0.0.1:32400/status/sessions?X-Plex-Token=$token"
 #Webhook plex
 $Uri = ""
 $image_gif = "touz.gif"
