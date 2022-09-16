@@ -7,42 +7,42 @@
 # Le script doit se lancer 1 fois par exemple a 00h
 ##########################################################################
 #Config
-$chemin_du_repertoire_script = "C:\Users\maxim\OneDrive\Documents\plex_scripts\Plex_shutdown"
+$chemin_du_repertoire_script = ".\Plex_shutdown"
 $token = ""
 $Plex = "http://127.0.0.1:32400/status/sessions?X-Plex-Token=$token"
-#Webhook plex
-$Uri = ""
+#Webhook Discord
+$Uri = "https://discord.com/api/webhooks/1011636669163769970/HzCHIbGIhNC5z0Cj8aLT4MsZvvIrTvDufVmWuQDMTrViUPZ3LxDsve2Pm0lZrCZRq-v9"
+#GIF pour la notification Windows
 $image_gif = "touz.gif"
+#Temps avant l'arrêt du PC (600 = 10mn)
 $secondes = "600"
 ##########################################################################
 #Module pour les notification Windows
 import-Module PSDiscord
 import-Module BurntToast
-cd $chemin_du_repertoire_script
-
+$sec_min = $secondes / 60
 $code = "0"
 $notif = "0"
 
 #Notification Windows du lancement du script
 New-BurntToastNotification -AppLogo $image_gif -Text "Plex", "Lancement du script d'inactivité de Plex."
 function Shutdown_PC {   
-shutdown -s -f -t $secondes -c "Plex est inactif, l'ordinateur va s'eteindre dans $secondes secondes."           
+shutdown -s -f -t $secondes -c "Plex est inactif, l'ordinateur va s'eteindre dans $sec_min minutes."           
 }
 function notification {
 #Notification Windows 
-            New-BurntToastNotification -AppLogo $image_gif -Text "Plex", "Plex inactif, arrêt du PC dans $secondes secondes"
-            write-host "Plex est inactif, l'ordinateur va s'eteindre dans $secondes secondes."
+            New-BurntToastNotification -AppLogo $image_gif -Text "Plex", $message
+            write-host $message
             #Notification Discord
             if ($Uri -notlike $null)
             {
         $nom_machine = [system.environment]::MachineName
-		$messageDiscord = "Plex inactif :  Arret de $nom_machine en cours : $date"
-		Send-DiscordMessage -WebHookUrl $Uri -Text $messageDiscord
+		Send-DiscordMessage -WebHookUrl $Uri -Text $message
             }
 }
 function Show-Message {
 #Popup 
-            $Message = "Arrêt du PC dans $secondes secondes. Appuyer sur Annuler pour prolonger de $secondes secondes."
+            $Message = "Arrêt du PC dans $secondes secondes. Appuyer sur Annuler pour prolonger de $sec_min minutes."
             $Titre = "Plex"
             $btn = 1
             $Icon = 48
@@ -73,6 +73,8 @@ if ($code -eq "1"){
     Shutdown_PC
     $code = "2"
     if ($notif -eq "0"){
+     
+    $message = "Aucun utilisateur sur Plex :  Arret de " + $nom_machine + " dans " + $sec_min + " minutes."
     notification
     $notif = "1"
     }
@@ -84,6 +86,8 @@ if ($code -eq "1"){
 if ($code -eq "0")
 {
 shutdown /a
+$message = "Arrêt du PC " + $nom_machine + " annulé !"
+notification
 $notif = "0"
 }
 get-date -erroraction silen
