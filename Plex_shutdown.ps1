@@ -17,12 +17,11 @@ $chrome = "false"
 $image_gif = "$chemin_du_repertoire_script\touz.gif"
 #Temps avant l'arrêt du PC (600 = 10mn)
 $secondes = "600"
+#Config fin
 ##########################################################################
-#Module pour les notification Windows
 import-Module PSDiscord
 import-Module BurntToast
 $TOKEN= get-content "$chemin_du_repertoire_script\TOKEN.txt"
-#Webhook Discord
 $Uri = get-content "$chemin_du_repertoire_script\WEBHOOK_DISCORD.txt"
 $sec_min = $secondes / 60
 $notif = "0"
@@ -125,7 +124,7 @@ if ($in -eq "0"){
     }
     if ($shutdown -eq "2"){
         write-host "Plex va s'eteindre a $temp_off il est $date_minutes"
-        if ($temp_off -eq $date_minutes){
+        if ($temp_off -le $date_minutes){
         if($action_pw -eq "s"){
             shutdown -s -f
         }
