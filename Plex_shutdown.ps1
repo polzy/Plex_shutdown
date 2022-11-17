@@ -10,7 +10,7 @@ $chemin_du_repertoire_script = "C:\Users\maxim\OneDrive\Documents\plex_scripts\P
 #IP plex
 $PMS_IP='192.168.1.100:32400'
 #Action : s = shutdown  h = Hibernate
-$action_pw = "h"
+$action_pw = "s"
 #Si 'true' le script est annulé si Chrome est ouvert
 $chrome = "false"
 #GIF pour la notification Windows
@@ -131,6 +131,7 @@ if ($in -eq "0"){
         else{
             shutdown -$action_pw
         }
+		pause
         }
     }
     }
