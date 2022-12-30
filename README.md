@@ -1,5 +1,11 @@
 ## Plex_shutdown
 
+30/12/2022 :
+Nouvelle refonte du code xD 
+Ajout d'un fichier conf.ini
+Ajout des images sur les notif discord
+
+
 ##Note : 
 - Nettoyage
 - Correction des notifications
