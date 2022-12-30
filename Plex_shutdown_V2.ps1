@@ -5,7 +5,12 @@
 # Importez le module
 Import-Module BurntToast
 # Charger le fichier de configuration
+
 $config = Get-Content -Path .\config.ini
+if(!$config ){
+    write-host "Impossible de récupérer le fichier de configuration. Contactez votre admin d'amour sur discord avec un petit mot doux."
+    pause
+}
 
 # Créer un objet de configuration à partir du fichier
 $configObject = New-Object -TypeName System.Collections.Specialized.NameValueCollection
