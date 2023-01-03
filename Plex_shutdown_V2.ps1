@@ -5,8 +5,9 @@
 # Importez le module
 Import-Module BurntToast
 # Charger le fichier de configuration
+$chemin_du_repertoire_script = "C:\Users\maxim\OneDrive\Documents\plex_scripts\Plex_shutdown"
 
-$config = Get-Content -Path .\config.ini
+$config = Get-Content -Path "$chemin_du_repertoire_script\config.ini"
 if(!$config ){
     write-host "Impossible de récupérer le fichier de configuration. Contactez votre admin d'amour sur discord avec un petit mot doux."
     pause
@@ -29,8 +30,9 @@ $startTime = Get-Date -Hour $start -Minute 0 -Second 0
 $endTime = Get-Date -Hour $end -Minute 0 -Second 0
 $checkChrome = $configObject.Get('checkChrome')
 # Déclaration de la variable qui indique si la notification a été envoyée
-$notificationSent = $false
-$notificationDiscordSent = $false
+$global:notificationSent = $false
+$global:notificationDiscordSent2 = $false
+$global:notificationDiscordSent = $false
 $url = "http://" + $configObject.Get('PMS_IP') + "/status/sessions?X-Plex-Client-Identifier=$CLIENT_IDENT&X-Plex-Token=$TOKEN"
 # Variable to track the remaining timeout period
 $remainingTimeout = $configObject.Get('timeout')
@@ -102,11 +104,15 @@ function MainScript
                     # If no movies are found, send a notification to Discord and decrease the remaining timeout period
                     if($movies.Count -eq 0)
                     {
+                    
+                        if($global:notificationDiscordSent2 -like $false -or $remainingTimeout -eq "5" -or $remainingTimeout -eq "2" -or $remainingTimeout -eq "1"){
                         write-host "Attention! Il semble que personne ne regarde de film sur Plex. Le PC va s'arreter dans $remainingTimeout minutes."
                         sendNotificationToDiscord("Attention! Il semble que personne ne regarde de film sur Plex. Le PC va s'arreter dans $remainingTimeout minutes.")
-                       
+
+                        $global:notificationDiscordSent = $false
+                        $global:notificationDiscordSent2 = $true
+                        }
                         $remainingTimeout -= 1
-                        $notificationDiscordSent = $false
                     }
                     # If movies are found, reset the remaining timeout period and send a notification with the movie details
                     else
@@ -115,15 +121,17 @@ function MainScript
                         $movieString = ''
     
                         # Loop through the array of movies
+                        if ($global:notificationDiscordSent  -eq $false) {
                         foreach($movie in $movies)
                         {
                             # Add the movie details to the string
                             $movieString = "Le film $($movie.movie) est en cours de lecture par l'utilisateur $($movie.user). "
     
                             # Send the notification with the movie details
-                            if (!$notificationDiscordSent) {
+                           
                             sendNotificationToDiscord("$movieString L'arrêt du PC a été prolongé.")
-                            $notificationDiscordSent = $true
+                            $global:notificationDiscordSent = $true
+                            $global:notificationDiscordSent2 = $false
                             }
                         }
                         $remainingTimeout = $timeout
@@ -134,12 +142,12 @@ while(1 -eq 1)
 {
     
   # Vérification si la notification a déjà été envoyée
-  if (!$notificationSent) {
+  if ($global:notificationSent  -eq $false) {
     # Envoi de la notification
     write-host "Début du script d'inactivité."
-    New-BurntToastNotification -Text $name, "Début du script d'inactivité."
+    #New-BurntToastNotification -Text $name, "Début du script d'inactivité."
     # Mise à jour de la variable pour indiquer que la notification a été envoyée
-    $notificationSent = $true
+    $global:notificationSent = $true
   }
     $currentTime = Get-Date
     if (($currentTime -ge $startTime) -and ($currentTime -lt $endTime)) {
@@ -147,11 +155,11 @@ while(1 -eq 1)
             $chromeProcess = Get-Process chrome
             if ($chromeProcess -ne $null) {
                 # Code à exécuter si Google Chrome est ouvert
-                write-host "Google Chrome est ouvert"
+                write-host "Google Chrome est ouvert."
                 #write-host "L'option checkChrome est sur True, si Chrome est ouvert le Serveur ne s'arrete pas."
             } else {
                 # Code à exécuter si Google Chrome n'est pas ouvert
-                write-host "Google Chrome est fermé"
+                write-host "Google Chrome est fermé."
                 MainScript
                     }
                     
@@ -170,6 +178,8 @@ Start-Sleep -Seconds 60
 # If the remaining timeout period has reached 0, shut down the PC
 if($remainingTimeout -eq 0)
 {
+    sendNotificationToDiscord("Arret du PC.")
+    Start-Sleep 1
     Stop-Computer
 }
 }
