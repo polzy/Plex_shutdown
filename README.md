@@ -1,21 +1,29 @@
-## Plex_shutdown
+## Plex_shutdown_V2
 
-30/12/2022 :
-Nouvelle refonte du code xD 
-Ajout d'un fichier conf.ini
-Ajout des images sur les notif discord
+Le script est lancé sur un PC de bureau avec Plex Server depuis le planificateur de tâche Windows.
+Le but est d'arrêter le PC quand aucun utilisateur n'est sur Plex avec une heure définie. 
+Une option est aussi présente pour ne pas arrêter le serveur si Chrome est ouvert sur le PC
 
+'Pour le moment je ne sais pas comment faire autrement, mais il faut mettre le chemin du script dans le Plex_shutdown_V2 ligne 9 (Je regarde plus tard)'
 
-##Note : 
-- Nettoyage
-- Correction des notifications
-- Affichage en minutes sur les notifs et plus en secondes
+config.ini
 
-##11/10/2022 V2 : 
-- Refonte du code
-- Ajout des informations sur l'utilisateur en cours de lecture
-- Ajout d'une option pour Chrome (Si Chrome ouvert le PC ne s'arréte pas)
-
-
-A faire : 
-Choix des jours ou le script se lance. 
+```
+#Nom du serveur Plex (Pour affichage)
+Name=Plex Serveur
+#Remplacer la clé d'API www.themoviedb.org
+apiKey=#############################################
+# Remplacer l'URL du webhook Discord par la valeur appropriée
+webhookUrl=https://discord.com/api/webhooks/#############################################
+# Remplacer par l'IP du serveur Plex
+PMS_IP=192.168.1.100:32400
+# Remplacer le token Plex
+token=#############################################
+#Temps en minutes pour l'arrêt du PC
+timeout=20
+# Définir l'option qui permet de prendre en compte ou non la condition "Chrome Ouvert"
+checkChrome=$false
+#Heure de début et de fin du script 0 = minuit, cette option permet de définir des heures de fonctionnements.
+startTime=0
+endTime=19
+```
