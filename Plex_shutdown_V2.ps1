@@ -8,14 +8,12 @@ $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 # Charger le fichier de configuration pour le moment, mettre le chemain ici, je ne trouve pas pour faire autrement .. 
 $chemin_du_repertoire_script = "C:\Users\maxim\OneDrive\Documents\plex_scripts\Plex_shutdown"
-
 # Ici on test si config.ini est présent
 $config = Get-Content -Path "$chemin_du_repertoire_script\config.ini"
 if(!$config ){
     write-host "Impossible de récupérer le fichier de configuration. Contactez votre admin d'amour sur discord avec un petit mot doux."
     pause
 }
-
 # Créer un objet de configuration à partir du fichier config.ini
 $configObject = New-Object -TypeName System.Collections.Specialized.NameValueCollection
 foreach ($line in $config) {
@@ -23,7 +21,6 @@ foreach ($line in $config) {
         $configObject.Add($matches[1], $matches[2])
     }
 }
-
 $name = $configObject.Get('Name')
 $webhookUrl = $configObject.Get('webhookUrl')
 $token =  $configObject.Get('token')
