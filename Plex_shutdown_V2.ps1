@@ -1,6 +1,6 @@
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 #Module a installer pour les notifications Discord
-# Install-Module PSDiscord
+import-Module PSDiscord
 # Installez le module BurntToast si ce n'est pas déjà fait
 #Install-Module -Name BurntToast
 # Importez le module pour les notifications Windows
@@ -64,19 +64,14 @@ else{
 $movie_poster = $searchResults.results[0]
 
 # Récupérer l'URL de l'affiche du film
-$posterUrl = "https://image.tmdb.org/t/p/w500/$($movie_poster.poster_path)"
-# Créer l'objet auteur
-$author = New-DiscordAuthor -Name $name -IconUrl "https://previews.123rf.com/images/axsimen/axsimen1712/axsimen171200017/91263154-ic%C3%B4ne-de-plongeur-ventouse-en-caoutchouc-sur-le-b%C3%A2ton-utilis%C3%A9-pour-lib%C3%A9rer-les-drains-bouch%C3%A9s-outil-.jpg"
-# Créer l'objet champ personnalisé
-$field = New-DiscordField -Name 'Arret du serveur $name' -Value '' -Inline $true
-# Créer l'objet image
-$image = New-DiscordImage -Url $posterUrl
-# Créer l'objet embed
-$embed = New-DiscordEmbed -Title $Message -Description '' -Color BlueViolet -Author $author -Fields $field -Image $image
-# Envoyer la notification sur le canal de Discord
-Send-DiscordMessage -WebHookUrl $webhookUrl -Embed $embed 
-
-    }
+$Author = New-DiscordAuthor -Name 'Plex-Max' -IconUrl "https://raw.githubusercontent.com/EvotecIT/PSDiscord/master/Links/Asset%20130.png"
+$Fact = New-DiscordFact -Name 'Arret du serveur' -Value $Message -Inline $false
+$Thumbnail = New-DiscordThumbnail -Url "https://image.tmdb.org/t/p/w500/$($movie_poster.poster_path)"
+$image = New-DiscordImage -Url "https://play-lh.googleusercontent.com/slZYN_wnlAZ4BmyTZZakwfwAGm8JE5btL7u7AifhqCtUuxhtVVxQ1mcgpGOYC7MsAaU"
+$Section = New-DiscordSection -Title 'Plex-Max' -Description '' -Facts $Fact -Color BlueViolet -Thumbnail $image -Image $Thumbnail 
+Send-DiscordMessage -WebHookUrl $webhookUrl -Sections $Section -AvatarName 'Plex-Max' -AvatarUrl "https://raw.githubusercontent.com/EvotecIT/PSDiscord/master/Links/Asset%20130.png"
+   
+}
 }
 # Fonction pour vérifier si un utilisateur regarde un film sur Plex
 function checkUserWatchingMovie
@@ -158,7 +153,7 @@ function MainScript
                             }
                             # Envoyer la notification avec les détails du film
                            
-                            sendNotificationToDiscord("$movieString L'arret du PC est prolonge.")
+                            sendNotificationToDiscord("$movieString L'arret du PC est prolonge de $global:remainingTimeout minutes.")
                             $global:notificationDiscordSent = $true
                             $global:notificationDiscordSent2 = $false
                             }
