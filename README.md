@@ -4,7 +4,6 @@ Le script est lancé sur un PC de bureau avec Plex Server depuis le planificateu
 Le but est d'arrêter le PC quand aucun utilisateur n'est sur Plex avec une heure définie. 
 Une option est aussi présente pour ne pas arrêter le serveur si Chrome est ouvert sur le PC
 
-'Pour le moment je ne sais pas comment faire autrement, mais il faut mettre le chemin du script dans le Plex_shutdown_V2 ligne 9 (Je regarde plus tard)'
 
 config.ini
 
@@ -27,3 +26,4 @@ checkChrome=$false
 startTime=0
 endTime=19
 ```
+![image](https://github.com/polzy/Plex_shutdown/assets/1337715/50c11465-7fa1-4241-9a55-299cee28db78)
